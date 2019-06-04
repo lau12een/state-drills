@@ -1,13 +1,11 @@
-import React, { Component } from 'react';
-import './App.css';
-import Message from './Message';
-import TheDate from './state/TheDate';
-import HelloWorld from './state-drills/HelloWorld';
-import Counter from './state/Counter'
-import Tabs from './state/Tabs';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { shallow } from 'enzyme'
+import toJson from 'enzyme-to-json'
+import Tabs from './Tabs'
 
-
-const tabsProp = [
+describe(`Tabs Component`, () => {
+    const tabsProp = [
   { name: 'First tab',
     content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Laboriosam exercitationem quos consectetur expedita consequatur. Fugit, sapiente aspernatur corporis velit, dolor eum reprehenderit provident ipsam, maiores incidunt repellat! Facilis, neque doloremque.' },
   { name: 'Second tab',
@@ -15,23 +13,21 @@ const tabsProp = [
   { name: 'Third tab',
     content: 'Fugit, sapiente aspernatur corporis velit, dolor eum reprehenderit provident ipsam, maiores incidunt repellat! Facilis, neque doloremque. Lorem ipsum dolor sit amet consectetur adipisicing elit. Laboriosam exercitationem quos consectetur expedita consequatur.' },
 ];
+ 
+  it('renders without errors', () => {
+    const div = document.createElement('div');
+    ReactDOM.render(<Tabs />, div);
+    ReactDOM.unmountComponentAtNode(div);
+  })
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <h1>YOUR APPLICATION NAME!</h1>
-        <Message name="Message" unread={0}/>
-        <Message name="Notifications" unread={10}/>
-        <TheDate />
-        <Counter />
-        <Counter count={123} />
-      </div>
-        
-    );
-  }
-}
+  it('renders empty given no tabs', () => {
+    const wrapper = shallow(<Tabs />)
+    expect(toJson(wrapper)).toMatchSnapshot()
+  })
 
-
-
-export default App;
+  it('closes the first tab and opens any clicked tab', () => {
+  const wrapper = shallow(<Tabs tabs={tabsProp} />)
+  wrapper.find('button').at(1).simulate('click')
+  expect(toJson(wrapper)).toMatchSnapshot()
+})
+})
